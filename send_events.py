@@ -1,14 +1,15 @@
 import json
 import random
-from datetime import datetime
+import os
+import uuid
 import time
 import asyncio
+
+from datetime import datetime
 from azure.eventhub import EventData
 from azure.eventhub.aio import EventHubProducerClient
 from azure.identity.aio import DefaultAzureCredential
 from dotenv import load_dotenv
-import os
-import uuid
 
 async def generate_random_data():
     while True:
@@ -22,7 +23,7 @@ async def generate_random_data():
             "DepartureTime": datetime.now().strftime("%m/%d/%Y %H:%M"),
             "BusNo": random.randint(1, 100),
             "Capacity": 60,
-            "WithHTAP": 0
+            "WithHTAP": random.randint(0, 1)
         }
         await send_to_event_hubs(data)
         time.sleep(1)
@@ -32,6 +33,10 @@ async def send_to_event_hubs(data):
 
     EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.getenv('EVENT_HUB_FULLY_QUALIFIED_NAMESPACE')
     EVENT_HUB_NAME = os.getenv('EVENT_HUB_NAME')
+
+    print(f"Sending data to Event Hub: {EVENT_HUB_NAME}"
+            f" at {EVENT_HUB_FULLY_QUALIFIED_NAMESPACE}"
+    )
 
     credential = DefaultAzureCredential()
 
