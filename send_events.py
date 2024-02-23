@@ -11,6 +11,13 @@ from azure.eventhub.aio import EventHubProducerClient
 from azure.identity.aio import DefaultAzureCredential
 from dotenv import load_dotenv
 
+load_dotenv()
+
+BLOB_STORAGE_ACCOUNT_URL = "BLOB_STORAGE_ACCOUNT_URL"
+BLOB_CONTAINER_NAME = "BLOB_CONTAINER_NAME"
+EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.getenv('EVENT_HUB_FULLY_QUALIFIED_NAMESPACE')
+EVENT_HUB_NAME = os.getenv('EVENT_HUB_NAME')
+
 async def generate_random_data():
     while True:
         data = {
@@ -28,12 +35,8 @@ async def generate_random_data():
         await send_to_event_hubs(data)
         time.sleep(1)
 
+
 async def send_to_event_hubs(data):
-    load_dotenv()
-
-    EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.getenv('EVENT_HUB_FULLY_QUALIFIED_NAMESPACE')
-    EVENT_HUB_NAME = os.getenv('EVENT_HUB_NAME')
-
     print(f"Sending data to Event Hub: {EVENT_HUB_NAME}"
             f" at {EVENT_HUB_FULLY_QUALIFIED_NAMESPACE}"
     )
