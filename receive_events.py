@@ -18,7 +18,7 @@ BLOB_STORAGE_ACCOUNT_URL = "BLOB_STORAGE_ACCOUNT_URL"
 BLOB_CONTAINER_NAME = "BLOB_CONTAINER_NAME"
 EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.getenv('EVENT_HUB_FULLY_QUALIFIED_NAMESPACE')
 EVENT_HUB_NAME = os.getenv('EVENT_HUB_NAME')
-CONNECTION_STRING = os.getenv('CDB_URI')
+CDB_CONNECTON_STRING = os.getenv('CDB_CNN_STRING')
 DATABASE_NAME = os.getenv('CDB_DB_NAME')
 CONTAINER_NAME = os.getenv('CDB_CONTAINER_NAME')
 
@@ -69,23 +69,21 @@ async def on_event(partition_context, event):
     except json.JSONDecodeError:
         print(f"Error: event data is not valid JSON. Data: {event_data}")
         return
-
-    # Add an id property to the event.
-    event_dict['id'] = str(uuid.uuid4())
     
     await write_to_cosmosdb(event_dict)
 
 
 async def write_to_cosmosdb(data):
+    #print("Datatype before conversion: ",type(data))
     # Check if data is a dictionary.
     if not isinstance(data, dict):
         print(f"Error: data is not a dictionary. Data: {data}")
         return
     # print the data
-    print(f"Data: {data}")
+    #print(f"Read: {data}")
     
     # get the client
-    client = CosmosClient.from_connection_string(CONNECTION_STRING)
+    client = CosmosClient.from_connection_string(CDB_CONNECTON_STRING)
     # get the database
     database = client.get_database_client(DATABASE_NAME)
     # get the container
