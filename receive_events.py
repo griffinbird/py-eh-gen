@@ -90,7 +90,7 @@ async def write_to_cosmosdb(data):
     container = database.get_container_client(CONTAINER_NAME)
 
     # write the data to the container
-    container.create_item(body=data)
+    container.upsert_item(body=data)
     # print the data written to the container
     print(f"Data written to CosmosDB: {data}")
 
