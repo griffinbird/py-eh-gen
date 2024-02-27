@@ -18,6 +18,8 @@ BLOB_CONTAINER_NAME = "BLOB_CONTAINER_NAME"
 EVENT_HUB_FULLY_QUALIFIED_NAMESPACE = os.getenv('EVENT_HUB_FULLY_QUALIFIED_NAMESPACE')
 EVENT_HUB_NAME = os.getenv('EVENT_HUB_NAME')
 
+EVENTS_TO_SEND=5
+
 async def generate_random_data():
     while True:
         data = {
@@ -33,8 +35,13 @@ async def generate_random_data():
             "WithHTAP": random.randint(0, 1)
         }
         await send_to_event_hubs(data)
-        time.sleep(1)
+        #time.sleep(1)
 
+async def send_multiple_events(num_events):
+    tasks = []
+    for _ in range(num_events):
+        tasks.append(asyncio.create_task(generate_random_data()))
+    await asyncio.gather(*tasks)
 
 async def send_to_event_hubs(data):
     print(f"Sending data to Event Hub: {EVENT_HUB_NAME}"
@@ -65,4 +72,7 @@ async def send_to_event_hubs(data):
         await credential.close()
 
 # Call the function to generate and send random data
-asyncio.run(generate_random_data())
+# asyncio.run(generate_random_data())
+        
+# Call the function to send multiple events concurrently
+asyncio.run(send_multiple_events(EVENTS_TO_SEND))
