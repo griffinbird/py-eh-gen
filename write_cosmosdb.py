@@ -65,6 +65,3 @@ async def write_to_cosmosdb(data):
 
 # Call the function to generate and send random data
 asyncio.run(generate_random_data())
-
-# generate and write random data
-#generate_random_data()
